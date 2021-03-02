@@ -33,7 +33,7 @@ var instruct = [];
 instruct[0] = "Click to progress through the story";
 instruct[1] = "Press [F] for fullscreen";
 instruct[2] = "Press [I] to pull up the instruction screen";
-instruct[3] = "Press [Esc] or click to continue";
+instruct[3] = "Press [Esc] or [Spacebar] to continue";
 
 
 // State machine ///////////////////////////////////////////
@@ -44,16 +44,16 @@ var drawFunction;
 var stateNumber = 0;
 var stateList = [];
 
-var letterNumber;
+var letterNumber = 0;
 var letterState = [];
 
-var splashNumber;
+var splashNumber = 0;
 var splashState = [];
 
-var actionNumber;
+var actionNumber = 0;
 var actionState = [];
 
-var endNumber;
+var endNumber = 0;
 var endState = [];
 
 
@@ -64,7 +64,7 @@ var fontTitle;
 var fontLetter;
 
 // Misc Images
-var cursor;
+var swordCursor;
 
 // Instruction Images
 var imgKeyI;
@@ -96,7 +96,7 @@ function preload() {
   fontLetter = loadFont('assets/fonts/jsl_blackletter.otf');
 
   // Misc Images
-  cursor = loadImage('assets/cursor.png');
+  swordCursor = loadImage('assets/cursor.png');
 
   // Instruction Images
   imgKeyI = loadImage('assets/instruct/i_key.png');
@@ -109,6 +109,7 @@ function preload() {
 
   // 1 setup state
   setupBg = loadImage('assets/scene/splash.png');
+  instructBg = loadImage('assets/scene/splash.png');
 
   // 6 letter states that use the same background
   letterBg = loadImage('assets/scene/letter.png');
@@ -175,16 +176,17 @@ function draw() {
   // Draw the instructions message at the right top of screen
   drawInstructMessage();
 
-  // 'Click to continue' message on splash screens
-  drawClickInstruction();
-
   // Draw the controls
   drawMouseBoundary();
 
-  // custom cursor (must stay at bottom of function order)
+  // Reset the game if ended
+  resetGame();
+
+  // custom swordCursor (must stay at bottom of function order)
   noCursor();
-  image(cursor, mouseX, mouseY, 40, 40);
+  image(swordCursor, mouseX, mouseY, 40, 40);
 }
+
 
 /*************************************************************************
 // States
@@ -193,8 +195,7 @@ function draw() {
 // Setup States //////////////////////////////////////////////////
 
 stateOpening = function() {
-  background(colorsRow[1]);
-  image(openingBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(1, openingBg);
 
   // Title
   push();
@@ -207,8 +208,7 @@ stateOpening = function() {
   push();
     textAlign(LEFT);
     imageMode(CORNER);
-    // click to enter text
-    text("click to begin", width/3, 3*(height/4));
+    text("press spacebar to begin", width/3, 3*(height/4));
   pop();
 
   stateNumber = 0;
@@ -216,9 +216,7 @@ stateOpening = function() {
 
 // Background story
 stateSetup = function() {
-  background(colorsRow[1]);
-  image(setupBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
-
+  drawImage(1, setupBg);
   stateNumber = 1;
 
   text('Setup', width/2, height-(height/10));
@@ -226,7 +224,7 @@ stateSetup = function() {
 
 // Instructions for how to control the letter writing
 stateInstructions = function() {
-  background(colorsRow[1]);
+  drawImage(1, instructBg);
   for (i=0; i < 4; i++) {
     push();
     textSize(35);
@@ -242,48 +240,48 @@ stateInstructions = function() {
 // Letter States //////////////////////////////////////////////////
 
 stateLetter1 = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 0;
   stateNumber = 3;
     text('Letter1', width/2, height-(height/10));
 }
 
 stateLetter2a = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 1;
   stateNumber = 4;
     text('Letter2a', width/2, height-(height/10));
 }
 
 stateLetter2b = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 2;
   stateNumber = 5;
     text('Letter2b', width/2, height-(height/10));
 }
 
 stateLetter3a = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 3;
   stateNumber = 6;
     text('Letter3a', width/2, height-(height/10));
 }
 
 stateLetter3b = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 4;
   stateNumber = 7;
     text('Letter3b', width/2, height-(height/10));
 }
 
 stateLetter3c = function () {
-  background(colorsRow[4]);
-  image(letterBg, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(4, letterBg);
+  drawDecisionText('reject', 'accept');
   letterNumber = 5;
   stateNumber = 8;
     text('Letter3c', width/2, height-(height/10));
@@ -292,98 +290,89 @@ stateLetter3c = function () {
 // Splash States //////////////////////////////////////////////////
 
 stateSplash1 = function () {
-  background(colorsRow[0]);
-  image(splashBg[0], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[0]);
   splashNumber = 0;
   stateNumber = 9;
-    text('Splash1', width/2, height-(height/10));
+  drawSplashText('Splash1');
 }
 
 stateSplash2a = function () {
-  background(colorsRow[0]);
-  image(splashBg[1], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[1]);
   splashNumber = 1;
   stateNumber = 10;
-    text('Splash2a', width/2, height-(height/10));
+  drawSplashText('Splash2a');
 }
 
 stateSplash2b = function () {
-  background(colorsRow[0]);
-  image(splashBg[2], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[2]);
   splashNumber = 2;
   stateNumber = 11;
-    text('Splash2b', width/2, height-(height/10));
+  drawSplashText('Splash2b');
 }
 
 stateSplash3a = function () {
-  background(colorsRow[0]);
-  image(splashBg[3], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[3]);
   splashNumber = 3;
   stateNumber = 12;
-    text('Splash3a', width/2, height-(height/10));
+  drawSplashText('Splash3a');
 }
 
 stateSplash3b = function () {
-  background(colorsRow[0]);
-  image(splashBg[4], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[4]);
   splashNumber = 4;
   stateNumber = 13;
-    text('Splash3b', width/2, height-(height/10));
+  drawSplashText('Splash3b');
 }
 
 stateSplash3c = function () {
-  background(colorsRow[0]);
-  image(splashBg[5], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[5]);
   splashNumber = 5;
   stateNumber = 14;
-    text('Splash3c', width/2, height-(height/10));
+  drawSplashText('Splash3c');
 }
 
 stateSplashPath1 = function () {
-  background(colorsRow[0]);
-  image(splashBg[6], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[6]);
   splashNumber = 6;
   stateNumber = 15;
-    text('SplashPath1', width/2, height-(height/10));
+  drawSplashText('SplashPath1');
 }
 
 stateSplashPath2 = function () {
-  background(colorsRow[0]);
-  image(splashBg[7], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[7]);
   splashNumber = 7;
   stateNumber = 16;
-    text('SplashPath2', width/2, height-(height/10));
+  drawSplashText('SplashPath2');
 }
 
 stateSplashPath3 = function () {
-  background(colorsRow[0]);
-  image(splashBg[8], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, splashBg[8]);
   splashNumber = 8;
   stateNumber = 17;
-    text('SplashPath3', width/2, height-(height/10));
+  drawSplashText('SplashPath3');
 }
 
 // Action States //////////////////////////////////////////////////
 
 statePath3_tier1 = function () {
-  background(colorsRow[0]);
-  image(actionBg[0], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, actionBg[0]);
+  drawDecisionText('fight', 'accept');
   actionNumber = 0;
   stateNumber = 18;
     text('SplashPath3 Discovery', width/2, height-(height/10));
 }
 
 statePath3_tier2_fight = function () {
-  background(colorsRow[0]);
-  image(actionBg[1], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, actionBg[1]);
+  drawDecisionText('be slain', 'slay');
   actionNumber = 1;
   stateNumber = 19;
     text('SplashPath3 Fight', width/2, height-(height/10));
 }
 
 statePath3_tier2_accept = function () {
-  background(colorsRow[0]);
-  image(actionBg[2], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, actionBg[2]);
+  drawDecisionText('part ways', 'ask for\nhand in marriage');
   actionNumber = 2;
   stateNumber = 20;
     text('SplashPath3 Accept', width/2, height-(height/10));
@@ -392,48 +381,42 @@ statePath3_tier2_accept = function () {
 // Ending States //////////////////////////////////////////////////
 
 stateEnd_path1 = function () {
-  background(colorsRow[0]);
-  image(endBg[0], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[0]);
   endNumber = 0;
   stateNumber = 21;
     text('End 1', width/2, height-(height/10));
 }
 
 stateEnd_path2 = function () {
-  background(colorsRow[0]);
-  image(endBg[1], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[1]);
   endNumber = 1;
   stateNumber = 22;
       text('End 2', width/2, height-(height/10));
 }
 
 stateEnd_path3_slain = function () {
-  background(colorsRow[0]);
-  image(endBg[2], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[2]);
   endNumber = 2;
   stateNumber = 23;
       text('End 3', width/2, height-(height/10));
 }
 
 stateEnd_path3_slay = function () {
-  background(colorsRow[0]);
-  image(endBg[3], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[3]);
   endNumber = 3;
   stateNumber = 24;
       text('End 4', width/2, height-(height/10));
 }
 
 stateEnd_path3_part = function () {
-  background(colorsRow[0]);
-  image(endBg[4], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[4]);
   endNumber = 4;
   stateNumber = 25;
       text('End 5', width/2, height-(height/10));
 }
 
 stateEnd_path3_marry = function () {
-  background(colorsRow[0]);
-  image(endBg[5], width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+  drawImage(0, endBg[5]);
   endNumber = 5;
   stateNumber = 26;
       text('End 6', width/2, height-(height/10));
@@ -509,6 +492,22 @@ stateEnd_path3_marry = function () {
 // Custom functions
 **************************************************************************/
 
+function drawImage(color, img) {
+  background(colorsRow[color]);
+  image(img, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+}
+
+function drawSplashText(txt) {
+  text(txt, width/2, height-(height/8));
+  text('press spacebar to continue', width/2, height-(height/10));
+}
+
+function drawDecisionText(txtL, txtR) {
+  text(txtL, width/mouseBoundaryValue, height/2);
+  text(txtR, (mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2);
+}
+
+
 function drawInstructMessage() {
   for (i=0; i < 5; i++) {
     if (drawFunction === letterState[i]) {
@@ -522,25 +521,44 @@ function drawInstructMessage() {
   }
 }
 
-function drawClickInstruction() {
-  for (i=0; i < 8; i++) {
-    if (drawFunction === splashState[i]) {
-      text('click to continue', width/2, height-(height/20));
+// Resets game by reloading page
+function resetGame() {
+  for (i=0; i < 5; i++) {
+    if (drawFunction === endState[i]) {
+      window.location.href = "/"
     }
   }
 }
 
+
+
 // Depending on the user's mouse position, will draw an indicator with the appropriate preview of what that choice is
 // For example, the user moves the mouse to the left side of the screen and is told by this function that clicking on the left is a choice to reject
 function drawMouseBoundary() {
- if (drawFunction != stateOpening && drawFunction != stateInstructions) {
-    if (mouseX < width/mouseBoundaryValue) {
+// Mouse boundary for letters
+  for (i=0; i <= 5; i++) {
+    if (drawFunction === letterState[i]) {
+      if (mouseX < width/mouseBoundaryValue) {
       fill(colorsRow[3]);
       ellipse(width/mouseBoundaryValue, height/2, 100);
-    } 
-    else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
+      } 
+      else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
       fill(colorsRow[3]);
       ellipse((mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2, 100);
+      }
+    }
+  }
+// Mouse boundary for actions
+  for (i=0; i <= 2; i++) {
+    if (drawFunction === actionState[i]) {
+      if (mouseX < width/mouseBoundaryValue) {
+      fill(colorsRow[3]);
+      ellipse(width/mouseBoundaryValue, height/2, 100);
+      } 
+      else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
+      fill(colorsRow[3]);
+      ellipse((mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2, 100);
+      }
     }
   }
 }
@@ -551,15 +569,19 @@ function drawMouseBoundary() {
 **************************************************************************/
 // Navigate the states
 function keyPressed() {
-  // I for instructions state
-  if (key === 'i') {
-      drawFunction = stateInstructions;
+  // I for instructions state when on a letter state
+  for (i=0; i < 5; i++) {
+    if (drawFunction === letterState[i]) {
+      if (key === 'i') {
+          drawFunction = stateInstructions;
+      }
+    }
   }
 
   // Escape key to exit instructions state
   if (key === 'Escape') {
     if (drawFunction === stateInstructions) {
-      drawFunction = stateList[stateNumber];
+      drawFunction = letterState[letterNumber];;
     }
   }
 
@@ -568,58 +590,57 @@ function keyPressed() {
       let fs = fullscreen();
       fullscreen(!fs);
   }
+
+  // Spacebar presses that moves the state along linearly; for the introduction and the splash states
+  if (keyCode === 32) {
+    // Introduction
+    if (drawFunction === stateOpening) {
+        drawFunction = stateSetup;
+    }
+    else if (drawFunction === stateSetup) {
+        drawFunction = splashState[0];
+    }
+    else if (drawFunction === splashState[0]) {
+        drawFunction = stateInstructions;
+    }
+    else if (drawFunction === stateInstructions) {
+        drawFunction = letterState[letterNumber];
+    }
+    // Splashes to letters
+    else if (drawFunction === splashState[1]) {
+        drawFunction = letterState[1];
+    }
+    else if (drawFunction === splashState[2]) {
+        drawFunction = letterState[2];
+    }
+    else if (drawFunction === splashState[3]) {
+        drawFunction = letterState[3];
+    }
+    else if (drawFunction === splashState[4]) {
+        drawFunction = letterState[4];
+    }
+    else if (drawFunction === splashState[5]) {
+        drawFunction = letterState[5];
+    }
+    // Splashes to endings
+    // Path 1
+    else if (drawFunction === splashState[6]) {
+        drawFunction = endState[0];
+    }
+    // Path 2
+    else if (drawFunction === splashState[7]) {
+        drawFunction = endState[1];
+    }
+    // Path 3 (start of path 3)
+    else if (drawFunction === splashState[8]) {
+        drawFunction = actionState[0];
+    }
+  }
 }
 
+
+// Mouse clicks that move the state along nonlinearly; for the letters and choices made by the player
 function mousePressed() {
-  // Mouse clicks that move the state along linearly; for the introduction and the splash states
-
-  // Introduction
-  if (drawFunction === stateOpening) {
-      drawFunction = stateSetup;
-  }
-  else if (drawFunction === stateSetup) {
-      drawFunction = splashState[0];
-  }
-  else if (drawFunction === splashState[0]) {
-      drawFunction = stateInstructions;
-  }
-  else if (drawFunction === stateInstructions) {
-      drawFunction = letterState[0];
-  }
-  // Splashes to letters
-  else if (drawFunction === splashState[1]) {
-      drawFunction = letterState[1];
-  }
-  else if (drawFunction === splashState[2]) {
-      drawFunction = letterState[2];
-  }
-  else if (drawFunction === splashState[3]) {
-      drawFunction = letterState[3];
-  }
-  else if (drawFunction === splashState[4]) {
-      drawFunction = letterState[4];
-  }
-  else if (drawFunction === splashState[5]) {
-      drawFunction = letterState[5];
-  }
-  // Splashes to endings
-  // Path 1
-  else if (drawFunction === splashState[6]) {
-      drawFunction = endState[0];
-  }
-  // Path 2
-  else if (drawFunction === splashState[7]) {
-      drawFunction = endState[1];
-  }
-  // Path 3 (start of path 3)
-  else if (drawFunction === splashState[8]) {
-      drawFunction = actionState[0];
-  }
-
-
-
-  // Mouse clicks that move the state along nonlinearly; for the letters and choices made by the player
-
   if (drawFunction != stateOpening && drawFunction != stateInstructions) {
     // LEFT BOUNDARY (REJECT)
       if (mouseX < width/mouseBoundaryValue) {
@@ -698,7 +719,7 @@ function mousePressed() {
          }
          // Action state 2 to End state 5 (accept to marry)
          else if (drawFunction === actionState[2]) {
-            drawFunction = endState[2];
+            drawFunction = endState[5];
          }
 
 
