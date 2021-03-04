@@ -4,7 +4,7 @@ ART385 Project 1: Le Chevalier
           March 4, 2021
 
     Overview:
-    
+    A project about longing for someone you've only ever spoken to over text.
     
     ---------------------------------------------------------------------
     Notes: 
@@ -97,12 +97,25 @@ var letter_right;
 
 var letterList = [];
 
-letterList[0] = "Letter 1";
-letterList[1] = "Letter 2a";
-letterList[2] = "Letter 2b";
-letterList[3] = "Letter 3a";
-letterList[4] = "Letter 3b";
-letterList[5] = "Letter 3c";
+letterList[0] = "I caught witness of you upon the battlefield the other\nmorning, just as dawn was breaking.\n\nMarvelous! You are of gorgeous physique and\na very handsome individual.\n\nI wish I could tell you this all in person, but\nI alas can’t make the journey…\n\nTell me, where did you learn to fight like this?\n\nSincerely,\nAn admirer";
+letterList[1] = "Aha, you are a flirt!\n\nYou write well… beautifully, even.\n\nI wish I could find such words.\n\nI’d like to describe myself to you, but I don’t know\n\nif it would charm as marvelously as your writing.\n\nPlease tell me if you think this is a good idea.\n\nSincerely,\nYour admirer\n";
+letterList[2] = "Am I not good enough for a response?\n\nTruly?\n\nI had hoped you would be an admirable sort.\n\nSincerely,\nYour admirer.";
+letterList[3] = "Do you scorn my advances?";
+letterList[4] = "I would like to see you in person.";
+letterList[5] = "Let us meet in the moonlight.\n\nYou seem like you would\nsmell delicious up close.";
+
+
+var splashList = [];
+splashList[0] = "You ache for… something. Yearn for… someone.";
+splashList[1] = "Your heart feels a little less heavy.";
+splashList[2] = "You toss and turn at night.";
+splashList[3] = "You awake with fervor and delight.";
+splashList[4] = "You think of another.";
+splashList[5] = "The night and day are silent and long.";
+splashList[6] = "You feel empty and alone.";
+splashList[7] = "You find yourself filled with uncertainty.";
+splashList[8] = "You brim with excitement to meet your lover.";
+
 
 /*************************************************************************
 // Window resize
@@ -221,7 +234,7 @@ function draw() {
   drawLetter();
 
   // Reset the game if ended
-  resetGame();
+  // resetGame();
 
   // Frame which makes it look nice
   image(frame, width/2, height/2, 2125/imgRatio, 1285/imgRatio);
@@ -252,7 +265,9 @@ stateOpening = function() {
   push();
     textAlign(LEFT);
     imageMode(CORNER);
-    text("press spacebar to begin", 1.8*(width/3), 3*(height/4));
+    text("press", 1.8*(width/3), 3*(height/4));
+    image(imgKeySpacebar, 1.8*(width/3) + 300/4, 3*(height/4) - 300/4, 300/2, 300/2);
+    text("to begin", 1.8*(width/3) + 300/1.3, 3*(height/4));
   pop();
 
   stateNumber = 0;
@@ -263,7 +278,7 @@ stateSetup = function() {
   drawImage(1, setupBg);
   stateNumber = 1;
   textAlign(LEFT);
-  text("You are a knight,", width/6, height/3);
+  text("You are a knight in service of your lord,\nand spend your days in tourneys.\n\nOne day, you begin to receive\nlove letters from an unknown admirer.", width/6, height/3);
 }
 
 // Instructions for how to control the letter writing
@@ -290,7 +305,7 @@ stateInstructions = function() {
 
 stateLetter1 = function () {
   drawImage(4, letterBg);
-  drawDecisionText('reject', 'accept');
+  drawDecisionText('decline to\nrespond', 'write back\nfondly');
   letterNumber = 0;
   stateNumber = 3;
     // text('Letter1', width/2, height-(height/10));
@@ -298,7 +313,7 @@ stateLetter1 = function () {
 
 stateLetter2a = function () {
   drawImage(4, letterBg);
-  drawDecisionText('reject', 'accept');
+  drawDecisionText('"i do not\nthink so"', '"it is a\ngood idea"');
   letterNumber = 1;
   stateNumber = 4;
     // text('Letter2a', width/2, height-(height/10));
@@ -306,7 +321,7 @@ stateLetter2a = function () {
 
 stateLetter2b = function () {
   drawImage(4, letterBg);
-  drawDecisionText('reject', 'accept');
+  drawDecisionText('decline to\nrespond', 'write back\napologetically');
   letterNumber = 2;
   stateNumber = 5;
     // text('Letter2b', width/2, height-(height/10));
@@ -342,63 +357,63 @@ stateSplash1 = function () {
   drawImage(1, splashBg[0]);
   splashNumber = 0;
   stateNumber = 9;
-  // drawSplashText('Splash1');
+  drawSplashText(splashList[0]);
 }
 
 stateSplash2a = function () {
   drawImage(1, splashBg[1]);
   splashNumber = 1;
   stateNumber = 10;
-  // drawSplashText('Splash2a');
+  drawSplashText(splashList[1]);
 }
 
 stateSplash2b = function () {
   drawImage(1, splashBg[2]);
   splashNumber = 2;
   stateNumber = 11;
-  // drawSplashText('Splash2b');
+  drawSplashText(splashList[2]);
 }
 
 stateSplash3a = function () {
   drawImage(1, splashBg[3]);
   splashNumber = 3;
   stateNumber = 12;
-  // drawSplashText('Splash3a');
+  drawSplashText(splashList[3]);
 }
 
 stateSplash3b = function () {
   drawImage(1, splashBg[4]);
   splashNumber = 4;
   stateNumber = 13;
-  // drawSplashText('Splash3b');
+  drawSplashText(splashList[4]);
 }
 
 stateSplash3c = function () {
   drawImage(1, splashBg[5]);
   splashNumber = 5;
   stateNumber = 14;
-  // drawSplashText('Splash3c');
+  drawSplashText(splashList[5]);
 }
 
 stateSplashPath1 = function () {
   drawImage(1, splashBg[6]);
   splashNumber = 6;
   stateNumber = 15;
-  // drawSplashText('SplashPath1');
+  drawSplashText(splashList[6]);
 }
 
 stateSplashPath2 = function () {
   drawImage(1, splashBg[7]);
   splashNumber = 7;
   stateNumber = 16;
-  // drawSplashText('SplashPath2');
+  drawSplashText(splashList[7]);
 }
 
 stateSplashPath3 = function () {
   drawImage(1, splashBg[8]);
   splashNumber = 8;
   stateNumber = 17;
-  // drawSplashText('SplashPath3');
+  drawSplashText(splashList[8]);
 }
 
 // Action States //////////////////////////////////////////////////
@@ -407,7 +422,8 @@ statePath3_tier1 = function () {
   drawImage(0, actionBg[0]);
   drawDecisionText('"you are an evil creature\nof the night?"', '"you are even more beautiful\nthan i imagined you"');
   actionNumber = 0;
-  stateNumber = 18;``
+  stateNumber = 18;
+  drawDialoguetext("I'm so pleased to meet you.");
     // text('SplashPath3 Discovery', width/2, height-(height/10));
 }
 
@@ -416,6 +432,7 @@ statePath3_tier2_fight = function () {
   drawDecisionText('hesitate and\nstay your blade', 'go for the kill');
   actionNumber = 1;
   stateNumber = 19;
+  drawDialoguetext("You would draw your blade to me?.");
     // text('SplashPath3 Fight', width/2, height-(height/10));
 }
 
@@ -424,6 +441,7 @@ statePath3_tier2_accept = function () {
   drawDecisionText('part ways', 'ask for\nhand in marriage');
   actionNumber = 2;
   stateNumber = 20;
+  drawDialoguetext("I think I love you.");
     // text('SplashPath3 Accept', width/2, height-(height/10));
 }
 
@@ -433,6 +451,7 @@ stateEnd_path1 = function () {
   drawImage(1, endBg[0]);
   endNumber = 0;
   stateNumber = 21;
+  drawSplashText("you are mauled unexpectedly\nin the moonlight");
     // text('End 1', width/2, height-(height/10));
 }
 
@@ -440,6 +459,7 @@ stateEnd_path2 = function () {
   drawImage(1, endBg[1]);
   endNumber = 1;
   stateNumber = 22;
+  drawSplashText("you are alone in the night");
       // text('End 2', width/2, height-(height/10));
 }
 
@@ -447,6 +467,7 @@ stateEnd_path3_slain = function () {
   drawImage(4, endBg[2]);
   endNumber = 2;
   stateNumber = 23;
+  drawSplashText("you have been slain most viciously");
       // text('End 3', width/2, height-(height/10));
 }
 
@@ -454,6 +475,7 @@ stateEnd_path3_slay = function () {
   drawImage(3, endBg[3]);
   endNumber = 3;
   stateNumber = 24;
+  drawSplashText("you have slain most viciously");
       // text('End 4', width/2, height-(height/10));
 }
 
@@ -461,6 +483,7 @@ stateEnd_path3_part = function () {
   drawImage(1, endBg[4]);
   endNumber = 4;
   stateNumber = 25;
+  drawSplashText("you part on good terms");
       // text('End 5', width/2, height-(height/10));
 }
 
@@ -468,6 +491,7 @@ stateEnd_path3_marry = function () {
   drawImage(1, endBg[5]);
   endNumber = 5;
   stateNumber = 26;
+  drawSplashText("you have a summer wedding");
       // text('End 6', width/2, height-(height/10));
 }
 
@@ -541,14 +565,29 @@ stateEnd_path3_marry = function () {
 // Custom functions
 **************************************************************************/
 
+// Background images
 function drawImage(color, img) {
   background(colorsRow[color]);
   image(img, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
 }
 
 function drawSplashText(txt) {
-  text(txt, width/2, height-(height/8));
-  text('press spacebar to continue', width/2, height-(height/10));
+  push();
+  textSize(width/30);
+  text(txt, width/2, height/3 + 50);
+  pop();
+  push();
+  textSize(width/45);
+  text("press spacebar to continue", width/2, 6.5*(height/8));
+  pop();
+}
+
+function drawDialoguetext(txt) {
+  push();
+  fill(colorsRow[3]);
+  textSize(width/35);
+  text(txt, width/2, height/4);
+  pop();
 }
 
 function drawDecisionText(txtL, txtR) {
@@ -582,7 +621,7 @@ function drawLetterText(txt) {
     textAlign(LEFT);
     textFont(fontLetter);
     textSize(24);
-    text(txt, width/2, height/2);
+    text(txt, width/2 - 640/2/imgRatio, height/2 - 215/imgRatio);
     pop();
   } 
 }
@@ -599,24 +638,11 @@ function drawInstructMessage() {
       pop();
     }
   }
-
-  for (i=0; i <= 8; i++) {
-    if (drawFunction === splashState[i]) {
-      push();
-      textSize(width/30);
-      text("your life feels a little fuller", width/2, height/3);
-      pop();
-      push();
-      textSize(width/45);
-      text("press spacebar to continue", width/2, 6.5*(height/8));
-      pop();
-    }
-  }
 }
 
-// Resets game by reloading page
+// Resets game by reloading page; called in keyPressed
 function resetGame() {
-  for (i=0; i < 5; i++) {
+  for (i=0; i <= 5; i++) {
     if (drawFunction === endState[i]) {
       window.location.href = "/"
     }
@@ -679,6 +705,7 @@ function keyPressed() {
 
   // Spacebar presses that moves the state along linearly; for the introduction and the splash states
   if (keyCode === 32) {
+    resetGame();
     // Introduction
     if (drawFunction === stateOpening) {
         drawFunction = stateSetup;
@@ -732,14 +759,14 @@ function mousePressed() {
       if (mouseX < width/mouseBoundaryValue) {
         // First letter to S2a
          if (drawFunction === letterState[0]) {
-            drawFunction = splashState[1];
+            drawFunction = splashState[2];
          }
          // Second letter A to S3a
-         else if (drawFunction === letterState[1]) {
+         else if (drawFunction === letterState[2]) {
             drawFunction = splashState[3];
          }
          // Second Letter B to S3b
-         else if (drawFunction === letterState[2]) {
+         else if (drawFunction === letterState[1]) {
             drawFunction = splashState[4];
          }  
         // Third letter A to Spath1
@@ -776,13 +803,14 @@ function mousePressed() {
             drawFunction = splashState[1];
          }
          // Second letter A to S3b
-         else if (drawFunction === letterState[1]) {
+         else if (drawFunction === letterState[2]) {
             drawFunction = splashState[4];
          }
          // Second Letter B to S3c
-         else if (drawFunction === letterState[2]) {
+         else if (drawFunction === letterState[1]) {
             drawFunction = splashState[5];
          }  
+         // Paths
         // Third letter A to Spath2
          else if (drawFunction === letterState[3]) {
             drawFunction = splashState[7];
