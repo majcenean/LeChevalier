@@ -151,7 +151,6 @@ function preload() {
 
   // 1 setup state
   setupBg = loadImage('assets/scene/setup.png');
-  instructBg = loadImage('assets/scene/splash.png');
 
   // 6 letter states that use the same background
   letterBg = loadImage('assets/scene/letter_bg.png');
@@ -644,7 +643,7 @@ function drawInstructMessage() {
 function resetGame() {
   for (i=0; i <= 5; i++) {
     if (drawFunction === endState[i]) {
-      window.location.href = "/"
+      window.location.href = "."
     }
   }
 }
