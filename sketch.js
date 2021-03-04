@@ -18,13 +18,13 @@ ART385 Project 1: Le Chevalier
 
 // Values ///////////////////////////////////////////
 // How big should the images/scene be
-var imgRatio = 1.3;
+var imgRatio = 1.5;
 
 // How far apart should the instructions be from one another
 var instructionOffset = 50;
 
 // Mouse boundary; how far should the user have to move their mouse, and where should the indication appear
-var mouseBoundaryValue = 9;
+var mouseBoundaryValue = 6.5;
 
 
 // String arrays
@@ -63,9 +63,6 @@ var fontMain;
 var fontTitle;
 var fontLetter;
 
-// Misc Images
-var swordCursor;
-
 // Instruction Images
 var imgKeyI;
 var imgKeyF;
@@ -78,6 +75,19 @@ var letterBg;
 var splashBg = [];
 var actionBg = [];
 var endBg = [];
+
+// Decoration Images
+var swordCursor;
+var frame;
+var quill_left;
+var quill_right;
+var sword_left;
+var sword_right;
+
+// Letters
+var letter;
+var letter_left;
+var letter_right;
 
 /*************************************************************************
 // Window resize
@@ -105,14 +115,14 @@ function preload() {
 
   // Background Images /////////////////////////////////////
   // 1 opening state
-  openingBg = loadImage('assets/scene/splash.png');
+  openingBg = loadImage('assets/scene/main_splash.png');
 
   // 1 setup state
-  setupBg = loadImage('assets/scene/splash.png');
+  setupBg = loadImage('assets/scene/setup.png');
   instructBg = loadImage('assets/scene/splash.png');
 
   // 6 letter states that use the same background
-  letterBg = loadImage('assets/scene/letter.png');
+  letterBg = loadImage('assets/scene/letter_bg.png');
 
   // 9 splash states
   splashBg[0] = loadImage('assets/scene/scene.png');
@@ -139,7 +149,16 @@ function preload() {
   endBg[5] = loadImage('assets/scene/scene.png');
 
 // Decoration Images
+  frame = loadImage('assets/scene/frame.png');
+  quill_left = loadImage('assets/scene/quill_left.png');
+  quill_right = loadImage('assets/scene/quill_right.png');
+  sword_left = loadImage('assets/scene/sword_left.png');
+  sword_right = loadImage('assets/scene/sword_right.png');
 
+// Letter Images
+  letter = loadImage('assets/scene/letters/letter_neutral.png');
+  letter_left = loadImage('assets/scene/letters/letter_reject.png');
+  letter_right = loadImage('assets/scene/letters/letter_accept.png');
 }
 
 /*************************************************************************
@@ -179,8 +198,14 @@ function draw() {
   // Draw the controls
   drawMouseBoundary();
 
+  // Draw the letter;
+  drawLetter();
+
   // Reset the game if ended
   resetGame();
+
+  // Frame which makes it look nice
+  image(frame, width/2, height/2, 2125/imgRatio, 1285/imgRatio);
 
   // custom swordCursor (must stay at bottom of function order)
   noCursor();
@@ -201,14 +226,14 @@ stateOpening = function() {
   push();
     textFont(fontTitle);
     textAlign(LEFT);
-    textSize(width/20);
-    text("Le Chevalier", width/3, height/3);
+    textSize(width/15);
+    text("Le chevalier", 1.5*(width/3), 2*(height/3));
   pop();
 
   push();
     textAlign(LEFT);
     imageMode(CORNER);
-    text("press spacebar to begin", width/3, 3*(height/4));
+    text("press spacebar to begin", 1.8*(width/3), 3*(height/4));
   pop();
 
   stateNumber = 0;
@@ -218,23 +243,27 @@ stateOpening = function() {
 stateSetup = function() {
   drawImage(1, setupBg);
   stateNumber = 1;
-
-  text('Setup', width/2, height-(height/10));
+  textAlign(LEFT);
+  text("You are a knight,", width/6, height/3);
 }
 
 // Instructions for how to control the letter writing
 stateInstructions = function() {
-  drawImage(1, instructBg);
+  drawImage(4, instructBg);
+
+  textSize(width/20);
+  text("Instructions", width/2, height/4);
+
   for (i=0; i < 4; i++) {
     push();
     textSize(35);
     textAlign(LEFT);
-    text(instruct[i], width/4, height/4+(i*instructionOffset));
+    text(instruct[i], width/4, height/3+(i*instructionOffset));
     pop();
   }
+
   stateNumber = 2;
 }
-
 
 
 // Letter States //////////////////////////////////////////////////
@@ -244,7 +273,7 @@ stateLetter1 = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 0;
   stateNumber = 3;
-    text('Letter1', width/2, height-(height/10));
+    // text('Letter1', width/2, height-(height/10));
 }
 
 stateLetter2a = function () {
@@ -252,7 +281,7 @@ stateLetter2a = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 1;
   stateNumber = 4;
-    text('Letter2a', width/2, height-(height/10));
+    // text('Letter2a', width/2, height-(height/10));
 }
 
 stateLetter2b = function () {
@@ -260,7 +289,7 @@ stateLetter2b = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 2;
   stateNumber = 5;
-    text('Letter2b', width/2, height-(height/10));
+    // text('Letter2b', width/2, height-(height/10));
 }
 
 stateLetter3a = function () {
@@ -268,7 +297,7 @@ stateLetter3a = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 3;
   stateNumber = 6;
-    text('Letter3a', width/2, height-(height/10));
+    // text('Letter3a', width/2, height-(height/10));
 }
 
 stateLetter3b = function () {
@@ -276,7 +305,7 @@ stateLetter3b = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 4;
   stateNumber = 7;
-    text('Letter3b', width/2, height-(height/10));
+    // text('Letter3b', width/2, height-(height/10));
 }
 
 stateLetter3c = function () {
@@ -284,72 +313,72 @@ stateLetter3c = function () {
   drawDecisionText('reject', 'accept');
   letterNumber = 5;
   stateNumber = 8;
-    text('Letter3c', width/2, height-(height/10));
+    // text('Letter3c', width/2, height-(height/10));
 }
 
 // Splash States //////////////////////////////////////////////////
 
 stateSplash1 = function () {
-  drawImage(0, splashBg[0]);
+  drawImage(1, splashBg[0]);
   splashNumber = 0;
   stateNumber = 9;
-  drawSplashText('Splash1');
+  // drawSplashText('Splash1');
 }
 
 stateSplash2a = function () {
-  drawImage(0, splashBg[1]);
+  drawImage(1, splashBg[1]);
   splashNumber = 1;
   stateNumber = 10;
-  drawSplashText('Splash2a');
+  // drawSplashText('Splash2a');
 }
 
 stateSplash2b = function () {
-  drawImage(0, splashBg[2]);
+  drawImage(1, splashBg[2]);
   splashNumber = 2;
   stateNumber = 11;
-  drawSplashText('Splash2b');
+  // drawSplashText('Splash2b');
 }
 
 stateSplash3a = function () {
-  drawImage(0, splashBg[3]);
+  drawImage(1, splashBg[3]);
   splashNumber = 3;
   stateNumber = 12;
-  drawSplashText('Splash3a');
+  // drawSplashText('Splash3a');
 }
 
 stateSplash3b = function () {
-  drawImage(0, splashBg[4]);
+  drawImage(1, splashBg[4]);
   splashNumber = 4;
   stateNumber = 13;
-  drawSplashText('Splash3b');
+  // drawSplashText('Splash3b');
 }
 
 stateSplash3c = function () {
-  drawImage(0, splashBg[5]);
+  drawImage(1, splashBg[5]);
   splashNumber = 5;
   stateNumber = 14;
-  drawSplashText('Splash3c');
+  // drawSplashText('Splash3c');
 }
 
 stateSplashPath1 = function () {
-  drawImage(0, splashBg[6]);
+  drawImage(1, splashBg[6]);
   splashNumber = 6;
   stateNumber = 15;
-  drawSplashText('SplashPath1');
+  // drawSplashText('SplashPath1');
 }
 
 stateSplashPath2 = function () {
-  drawImage(0, splashBg[7]);
+  drawImage(1, splashBg[7]);
   splashNumber = 7;
   stateNumber = 16;
-  drawSplashText('SplashPath2');
+  // drawSplashText('SplashPath2');
 }
 
 stateSplashPath3 = function () {
-  drawImage(0, splashBg[8]);
+  drawImage(1, splashBg[8]);
   splashNumber = 8;
   stateNumber = 17;
-  drawSplashText('SplashPath3');
+  // drawSplashText('SplashPath3');
 }
 
 // Action States //////////////////////////////////////////////////
@@ -359,7 +388,7 @@ statePath3_tier1 = function () {
   drawDecisionText('fight', 'accept');
   actionNumber = 0;
   stateNumber = 18;
-    text('SplashPath3 Discovery', width/2, height-(height/10));
+    // text('SplashPath3 Discovery', width/2, height-(height/10));
 }
 
 statePath3_tier2_fight = function () {
@@ -367,7 +396,7 @@ statePath3_tier2_fight = function () {
   drawDecisionText('be slain', 'slay');
   actionNumber = 1;
   stateNumber = 19;
-    text('SplashPath3 Fight', width/2, height-(height/10));
+    // text('SplashPath3 Fight', width/2, height-(height/10));
 }
 
 statePath3_tier2_accept = function () {
@@ -375,7 +404,7 @@ statePath3_tier2_accept = function () {
   drawDecisionText('part ways', 'ask for\nhand in marriage');
   actionNumber = 2;
   stateNumber = 20;
-    text('SplashPath3 Accept', width/2, height-(height/10));
+    // text('SplashPath3 Accept', width/2, height-(height/10));
 }
 
 // Ending States //////////////////////////////////////////////////
@@ -384,42 +413,42 @@ stateEnd_path1 = function () {
   drawImage(0, endBg[0]);
   endNumber = 0;
   stateNumber = 21;
-    text('End 1', width/2, height-(height/10));
+    // text('End 1', width/2, height-(height/10));
 }
 
 stateEnd_path2 = function () {
   drawImage(0, endBg[1]);
   endNumber = 1;
   stateNumber = 22;
-      text('End 2', width/2, height-(height/10));
+      // text('End 2', width/2, height-(height/10));
 }
 
 stateEnd_path3_slain = function () {
   drawImage(0, endBg[2]);
   endNumber = 2;
   stateNumber = 23;
-      text('End 3', width/2, height-(height/10));
+      // text('End 3', width/2, height-(height/10));
 }
 
 stateEnd_path3_slay = function () {
   drawImage(0, endBg[3]);
   endNumber = 3;
   stateNumber = 24;
-      text('End 4', width/2, height-(height/10));
+      // text('End 4', width/2, height-(height/10));
 }
 
 stateEnd_path3_part = function () {
   drawImage(0, endBg[4]);
   endNumber = 4;
   stateNumber = 25;
-      text('End 5', width/2, height-(height/10));
+      // text('End 5', width/2, height-(height/10));
 }
 
 stateEnd_path3_marry = function () {
   drawImage(0, endBg[5]);
   endNumber = 5;
   stateNumber = 26;
-      text('End 6', width/2, height-(height/10));
+      // text('End 6', width/2, height-(height/10));
 }
 
 
@@ -507,15 +536,44 @@ function drawDecisionText(txtL, txtR) {
   text(txtR, (mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2);
 }
 
+function drawLetter() {
+  for (i=0; i <= 5; i++) {
+    if (drawFunction === letterState[i]) {
+      if (mouseX > width/mouseBoundaryValue && mouseX < (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
+        image(letter, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+      } 
+      else if (mouseX < width/mouseBoundaryValue) {
+        image(letter_left, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+      }       
+      else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
+        image(letter_right, width/2, height/2, 1920/imgRatio, 1080/imgRatio);
+      }
+    }
+  }
+}
+
 
 function drawInstructMessage() {
-  for (i=0; i < 5; i++) {
+  for (i=0; i <= 5; i++) {
     if (drawFunction === letterState[i]) {
-      image(imgKeyI, width-60, 50, 150, 150);
+      image(imgKeyI, width-150, 30, 100, 100);
       push();
-      textSize(28);
+      textSize(24);
       textAlign(RIGHT);
-      text(instruct[2], width-100, 50);
+      text(instruct[2], width-180, 35);
+      pop();
+    }
+  }
+
+  for (i=0; i <= 8; i++) {
+    if (drawFunction === splashState[i]) {
+      push();
+      textSize(width/30);
+      text("your life feels a little fuller", width/2, height/3);
+      pop();
+      push();
+      textSize(width/45);
+      text("press spacebar to continue", width/2, 6.5*(height/8));
       pop();
     }
   }
@@ -530,8 +588,6 @@ function resetGame() {
   }
 }
 
-
-
 // Depending on the user's mouse position, will draw an indicator with the appropriate preview of what that choice is
 // For example, the user moves the mouse to the left side of the screen and is told by this function that clicking on the left is a choice to reject
 function drawMouseBoundary() {
@@ -539,12 +595,10 @@ function drawMouseBoundary() {
   for (i=0; i <= 5; i++) {
     if (drawFunction === letterState[i]) {
       if (mouseX < width/mouseBoundaryValue) {
-      fill(colorsRow[3]);
-      ellipse(width/mouseBoundaryValue, height/2, 100);
+      image(quill_left, width/mouseBoundaryValue, height/2+50, 150, 150);
       } 
       else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
-      fill(colorsRow[3]);
-      ellipse((mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2, 100);
+      image(quill_right, (mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2+50, 150, 150);
       }
     }
   }
@@ -552,17 +606,14 @@ function drawMouseBoundary() {
   for (i=0; i <= 2; i++) {
     if (drawFunction === actionState[i]) {
       if (mouseX < width/mouseBoundaryValue) {
-      fill(colorsRow[3]);
-      ellipse(width/mouseBoundaryValue, height/2, 100);
+      image(sword_left, width/mouseBoundaryValue, height/2+50, 150, 150);
       } 
       else if (mouseX > (mouseBoundaryValue-1)*(width/mouseBoundaryValue)) {
-      fill(colorsRow[3]);
-      ellipse((mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2, 100);
+      image(sword_right, (mouseBoundaryValue-1)*(width/mouseBoundaryValue), height/2+50, 150, 150);
       }
     }
   }
 }
-
 
 /*************************************************************************
 // Control / interaction functions
